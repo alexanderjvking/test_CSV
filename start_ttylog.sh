@@ -30,7 +30,7 @@
 
      echo "starting session w tty_sid:$CNT" >> $LOGPATH
 
-     sudo /usr/local/src/ttylog/ttylog $TTY >> $LOGPATH 2>/dev/null &
+     sudo /usr/sbin/ttylog $TTY >> $LOGPATH 2>/dev/null &
 
      bash
      echo "END tty_sid:$CNT" >> $LOGPATH
