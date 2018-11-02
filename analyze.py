@@ -123,7 +123,7 @@ if __name__ == "__main__":
                     user = x.split('un:')[-1]
                 if 'hn:' in x:
                     host = x.split('hn:')[-1].split('.')[0]
-            #prompt = '{}@{}'.format(user,host)
+            prompt = '{}@{}'.format('instructor','TreasureHunt')
             if 'bash' in lines[i-1] or 'bash' in lines[i+1]:
                 split_line = ( lines[i-1] if 'bash' in lines[i-1] else lines[i+1] ).split()
                 for x in split_line:
