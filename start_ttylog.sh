@@ -3,23 +3,23 @@
  if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
 
      TTY_CMD=$(tty)
-     TTY=${TTY_CMD:5:15}
-     HN=$(cat /usr/local/src/nickname)
-     HOST=$(echo $HN | awk -F. '{print $(NF - 2)}')
-     EXP=$(echo $HN | awk -F. '{print $(NF - 1)}')
-     PROJ=$(echo $HN | awk -F. '{print $(NF)}')
+     TTY=${TTY_CMD:5}
+     #HN=$(cat /var/log/ttylog/nickname)
+     #HOST=$(echo $HN | awk -F. '{print $(NF - 1)}')
+     #EXP=$(echo $HN | awk -F. '{print $(NF - 1)}')
+     #PROJ=$(echo $HN | awk -F. '{print $(NF)}')
 
      sudo mkdir -p /var/log/ttylog/
 
-     if [ -e "/proj/$PROJ/exp/$EXP/count.$HOST" ]; then
-         CNT=$(cat /proj/$PROJ/exp/$EXP/count.$HOST)
+     if [ -e "/var/log/ttylog/count.$HOST" ]; then
+         CNT=$(cat /var/log/ttylog/count.$HOST)
          let CNT++
-         echo $CNT > /proj/$PROJ/exp/$EXP/count.$HOST
+         echo $CNT > /var/log/ttylog/count.$HOST
      else
-         sudo touch /proj/$PROJ/exp/$EXP/count.$HOST
-         sudo chmod ugo+rw /proj/$PROJ/exp/$EXP/count.$HOST
-         echo "0" > /proj/$PROJ/exp/$EXP/count.$HOST
-         CNT=$(cat /proj/$PROJ/exp/$EXP/count.$HOST)
+         sudo touch /var/log/ttylog/count.$HOST
+         sudo chmod ugo+rw /var/log/ttylog/count.$HOST
+         echo "0" > /var/log/ttylog/count.$HOST
+         CNT=$(cat /var/log/ttylog/count.$HOST)
      fi
 
      export TTY_SID=$CNT
