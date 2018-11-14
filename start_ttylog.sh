@@ -4,7 +4,7 @@
 
      TTY_CMD=$(tty)
      TTY=${TTY_CMD:5:15}
-     HN=$(cat /var/emulab/boot/nickname)
+     HN=$(cat /usr/local/src/nickname)
      HOST=$(echo $HN | awk -F. '{print $(NF - 2)}')
      EXP=$(echo $HN | awk -F. '{print $(NF - 1)}')
      PROJ=$(echo $HN | awk -F. '{print $(NF)}')
