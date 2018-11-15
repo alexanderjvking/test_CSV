@@ -120,9 +120,9 @@ if __name__ == "__main__":
             split_line = lines[i].split()
             for x in split_line:
                 if 'un:' in x:
-                    user = x.split('un:')[-1]
+                    user = x.split('un:')[-1].split(' ')[0]
                 if 'hn:' in x:
-                    host = x.split('hn:')[-1].split('.')[0]
+                    host = x.split('hn:')[-1].split(' ')[0]
             prompt = '{}@{}'.format(user,host)
             if 'bash' in lines[i-1] or 'bash' in lines[i+1]:
                 split_line = ( lines[i-1] if 'bash' in lines[i-1] else lines[i+1] ).split()
