@@ -114,6 +114,9 @@ if __name__ == "__main__":
 
     ttylog_sessions = []
 
+    user = ''
+    host = ''
+	
     # initialize list of terminal sessions and what our shell prompt looks like
     for i in range(0, len(lines)):
         if 'sudo /usr/local/src/ttylog/ttylog pts' in lines[i]:
