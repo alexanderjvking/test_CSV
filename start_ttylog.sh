@@ -9,15 +9,15 @@
      #EXP=$(echo $HN | awk -F. '{print $(NF - 1)}')
      #PROJ=$(echo $HN | awk -F. '{print $(NF)}')
 
-     sudo mkdir -p /var/log/ttylog/
+     mkdir -p /var/log/ttylog/ #sudo
 
      if [ -e "/var/log/ttylog/count.$HOST" ]; then
          CNT=$(cat /var/log/ttylog/count.$HOST)
          let CNT++
          echo $CNT > /var/log/ttylog/count.$HOST
      else
-         sudo touch /var/log/ttylog/count.$HOST
-         sudo chmod ugo+rw /var/log/ttylog/count.$HOST
+         touch /var/log/ttylog/count.$HOST #sudo
+         chmod ugo+rw /var/log/ttylog/count.$HOST
          echo "0" > /var/log/ttylog/count.$HOST
          CNT=$(cat /var/log/ttylog/count.$HOST)
      fi
@@ -25,12 +25,12 @@
      export TTY_SID=$CNT
      LOGPATH=/var/log/ttylog/ttylog.$HOST.$CNT
 
-     sudo touch $LOGPATH
-     sudo chmod ugo+rw $LOGPATH
+     touch $LOGPATH #sudo
+     chmod ugo+rw $LOGPATH #sudo
 
      echo "starting session w tty_sid:$CNT" >> $LOGPATH
 
-     sudo /usr/local/src/ttylog/ttylog $TTY >> $LOGPATH 2>/dev/null &
+     /usr/local/src/ttylog/ttylog $TTY >> $LOGPATH 2>/dev/null & #sudo
 
      bash
      echo "END tty_sid:$CNT" >> $LOGPATH
