@@ -19,8 +19,8 @@
 
 while(1)
 {
-    system("cat /var/log/ttylog/ttylog.* > /var/log/ttylog/alltty.$(hostname).$(whoami)");
-    system("python /usr/local/src/analyze.py /var/log/auth.log /var/log/ttylog/alltty.$(hostname).$(whoami)" . " /var/log/ttylog/cli.$(hostname).$(whoami)" . ".csv");
+    system("cat /var/log/ttylog/ttylog.* > /var/log/ttylog/alltty");
+    system("python /usr/local/src/analyze.py /var/log/auth.log /var/log/ttylog/alltty" . " /var/log/ttylog/cli.$(hostname).$(whoami)" . ".csv");
     #system("cp /var/log/ttylog/cli." . $host . ".csv /proj/" . $proj . "/exp/" . $exp . "/logs/cli." . $host . ".csv");
     sleep(60);
 }
