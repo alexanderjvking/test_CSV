@@ -23,7 +23,7 @@
      fi
 
      export TTY_SID=$CNT
-     LOGPATH=/var/log/ttylog/ttylog.$CNT
+     LOGPATH=/var/log/ttylog/ttylog.$(hostname).$CNT
 
      sudo touch $LOGPATH #sudo
      sudo chmod ugo+rw $LOGPATH #sudo
