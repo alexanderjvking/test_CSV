@@ -17,12 +17,12 @@
 #    system("mv $fn $fn.$time");
 #}
 
-$host = system("$(hostname)")
+#$host = system("$(hostname)")
 
 while(1)
 {
-    system("sudo bash -c \'cat /var/log/ttylog/ttylog.* > /var/log/ttylog/alltty." . $host . "\'");
-    system("python /usr/local/src/analyze.py /var/log/auth.log /var/log/ttylog/alltty." . $host . " /var/log/ttylog/cli." . $host . ".csv");
+    system("sudo bash -c \'cat /var/log/ttylog/ttylog.* > /var/log/ttylog/alltty.$(hostname)\'");
+    system("python /usr/local/src/analyze.py /var/log/auth.log /var/log/ttylog/alltty.$(hostname)" . " /var/log/ttylog/cli." . $host . ".csv");
     #system("cp /var/log/ttylog/cli." . $host . ".csv /proj/" . $proj . "/exp/" . $exp . "/logs/cli." . $host . ".csv");
     sleep(60);
 }
