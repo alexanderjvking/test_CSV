@@ -239,7 +239,7 @@ if __name__ == "__main__":
                     timestamp = snoopy_entry[snoopy_data]
                     cwd = snoopy_data.split()[3][4:]
                     if len(csv_row) == 0:
-                        csv_row = ['CMBEGIN', timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
+                        csv_row = ['CMBEGIN', user, timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
                     else:
                         csv_row.append(snoopy_cmd)
                     ttylog_cmd = ttylog_cmd.replace(snoopy_cmd, '', 1)
