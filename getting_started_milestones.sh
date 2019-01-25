@@ -6,37 +6,37 @@ do
 	fi
 
 	if grep -Eq "$(whoami).*cd /bin" /var/log/auth.log; then
-		echo "Milestone 1: command 'cd /bin' found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 1: command 'cd /bin' found. TIME $(grep -E -m1 "$(whoami).*cd /bin" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 1: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
 
 	if grep -Eq "$(whoami).*okYouAreHERE" /var/log/auth.log; then
-		echo "Milestone 2: Traversal to okYouAreHERE! found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 2: Traversal to okYouAreHERE! found. TIME $(grep -E -m1 "$(whoami).*okYouAreHERE" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 2: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
 
 	if grep -Eq "$(whoami).*man file" /var/log/auth.log; then
-		echo "Milestone 3: command 'man file' was found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 3: command 'man file' was found. TIME $(grep -E -m1 "$(whoami).*man file" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 3: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
 
 	if grep -Eq "$(whoami).*imatextfiletoo.txt" /var/log/auth.log; then
-		echo "Milestone 4: command 'cat imatextfiletoo.txt' found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 4: command 'cat imatextfiletoo.txt' found. TIME $(grep -E -m1 "$(whoami).*imatextfiletoo.txt" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 4: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
 
 	if grep -Eq "$(whoami).*cat one.txt two.txt three.txt > alltogether.txt" /var/log/auth.log; then
-		echo "Milestone 5: command 'cat one.txt two.txt three.txt > alltogether.txt' found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 5: command 'cat one.txt two.txt three.txt > alltogether.txt' found. TIME $(grep -E -m1 "$(whoami).*cat one.txt two.txt three.txt > alltogether.txt" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 5: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
 
 	if grep -Eq "$(whoami).*vim editme.txt" /var/log/auth.log; then
-		echo "Milestone 6: command 'vim editme.txt' found" >> ~/.milestones.$(whoami).$(hostname).txt
+		echo "Milestone 6: command 'vim editme.txt' found. TIME $(grep -E -m1 "$(whoami).*vim editme.txt" | awk '{print $1 " " $2 " " $3;}')" >> ~/.milestones.$(whoami).$(hostname).txt
 	else
 		echo "Milestone 6: NOT COMPLETED" >> ~/.milestones.$(whoami).$(hostname).txt
 	fi
