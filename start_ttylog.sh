@@ -11,19 +11,19 @@
 
      sudo mkdir -p /var/log/ttylog/ #sudo
 
-     if [ -e "/var/log/ttylog/count.$(hostname)" ]; then
-         CNT=$(cat /var/log/ttylog/count.$(hostname))
+     if [ -e "/var/log/ttylog/count.$(whoami).$(hostname)" ]; then
+         CNT=$(cat /var/log/ttylog/count.$(whoami).$(hostname))
          let CNT++
-         echo $CNT > /var/log/ttylog/count.$(hostname)
+         echo $CNT > /var/log/ttylog/count.$(whoami).$(hostname)
      else
-         sudo touch /var/log/ttylog/count.$(hostname) #sudo
-         sudo chmod ugo+rw /var/log/ttylog/count.$(hostname)
-         echo "0" > /var/log/ttylog/count.$(hostname)
-         CNT=$(cat /var/log/ttylog/count.$(hostname))
+         sudo touch /var/log/ttylog/count.$(whoami).$(hostname) #sudo
+         sudo chmod ugo+rw /var/log/ttylog/count.$(whoami).$(hostname)
+         echo "0" > /var/log/ttylog/count.$(whoami).$(hostname)
+         CNT=$(cat /var/log/ttylog/count.$(whoami).$(hostname))
      fi
 
      export TTY_SID=$CNT
-     LOGPATH=/var/log/ttylog/ttylog.$(hostname).$CNT
+     LOGPATH=/var/log/ttylog/ttylog.$(whoami).$(hostname).$CNT
 
      sudo touch $LOGPATH #sudo
      sudo chmod ugo+rw $LOGPATH #sudo
