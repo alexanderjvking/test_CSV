@@ -11,10 +11,11 @@ import csv
 import string
 import sys
 import os.path
+import os.system
 import logging
 import re
 
-logpath = '/var/log/ttylog/analysis.log'; preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
+logpath = '/var/log/ttylog/analysis.log.$(whoami)'; preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
 #logpath = './analysis.log'; preprocpath = './preproc_snoopy.log' #dbg
 logging.basicConfig(filename=logpath, filemode='w', level=logging.DEBUG)
 
