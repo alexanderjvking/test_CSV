@@ -11,7 +11,6 @@ import csv
 import string
 import sys
 import os.path
-import os.system
 import logging
 import re
 
