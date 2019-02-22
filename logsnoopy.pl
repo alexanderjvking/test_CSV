@@ -21,7 +21,7 @@
 
 while(1)
 {
-    system("cat /var/log/ttylog/ttylog.* > /var/log/ttylog/alltty.\$\(whoami\).\$\(hostname\)");
+    system("cat /var/log/ttylog/ttylog.\$\(whoami\).\$\(hostname\).* > /var/log/ttylog/alltty.\$\(whoami\).\$\(hostname\)");
     system("python /usr/local/src/analyze.py /var/log/auth.log /var/log/ttylog/alltty.\$\(whoami\).\$\(hostname\)" . " /var/log/ttylog/cli.\$\(whoami\).\$\(hostname\).csv");
     #system("/usr/local/src/getting_started_milestones.sh")
     #system("cp /var/log/ttylog/cli." . $host . ".csv /proj/" . $proj . "/exp/" . $exp . "/logs/cli." . $host . ".csv");
