@@ -15,9 +15,9 @@ import subprocess
 import logging
 import re
 
-logpath = ('/var/log/ttylog/analysis.log.'+subprocess.check_output("whoami").strip()); preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
+#logpath = '/var/log/ttylog/analysis.log.'+subprocess.check_output("whoami").strip(); preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
 #logpath = './analysis.log'; preprocpath = './preproc_snoopy.log' #dbg
-logging.basicConfig(filename=logpath, filemode='w', level=logging.DEBUG)
+#logging.basicConfig(filename=logpath, filemode='w', level=logging.DEBUG)
 
 logging.debug("running with __name__ == {}".format(__name__))
 
@@ -168,9 +168,10 @@ if __name__ == "__main__":
     append = False
     tty_sess = ''
     cmd = ''
-
+    tty_user = ''
     # for every line in ttylog detect the beginning and end of a given ttylog session and grab everything in between
-    ordering = {} 
+    ordering = {}
+    user_order = {}
     for l in lines:
         if 'starting session w tty_sid' in l:
             for s in ttylog_sessions:
@@ -178,9 +179,11 @@ if __name__ == "__main__":
                     append = True
                     tty_sess = s
                     ordering[tty_sess] = []
+                    user_order[tty_sess] = []
                     count = -1 
                     sessions[tty_sess]['ttylog'] = {}
                     cmd = ''
+                    tty_user = ''
             continue
         if append:
             # append the line to ttylog session list
@@ -190,10 +193,14 @@ if __name__ == "__main__":
                 # seperate the command from its output
                 if prompt in l:
                     cmd = l.split('$', 1)[-1][1:]
+                    tty_user = l.split(']0',1)[1].split('@',1)[0][1:]
+                    print(tty_user)
                     if cmd != '':
                         count += 1
                         ordering[tty_sess].append(cmd)
                         sessions[tty_sess]['ttylog'][str(count)+cmd] = []
+                    if tty_user != '':
+                        user_order[tty_sess].append(tty_user)
                 elif cmd != '':
                     sessions[tty_sess]['ttylog'][str(count)+cmd].append(l)
 
@@ -212,10 +219,12 @@ if __name__ == "__main__":
     for s in ttylog_sessions:
         if 'ttylog' not in sessions[s].keys():
             continue
-        ttylogs = ordering[s] 
+        ttylogs = ordering[s]
+        ttylog_user_data = user_order[s]
         #for ttylog_entry in ttylogs:
         for count in range(0, len(ttylogs)):
             ttylog_entry = ttylogs[count]
+            ttylog_users = ttylog_user_data[count]
             ttylog_cmd = decode(ttylog_entry)
             ttylog_return_data = sessions[s]['ttylog'][str(count)+ttylog_entry]
             logging.debug('starting csv entry loop for command {}, hex for command: {}'.format(revealhex(ttylog_entry), ttylog_entry.encode('hex')))
@@ -240,7 +249,7 @@ if __name__ == "__main__":
                     timestamp = snoopy_entry[snoopy_data]
                     cwd = snoopy_data.split()[3][4:]
                     if len(csv_row) == 0:
-                        csv_row = ['CMBEGIN', user, timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
+                        csv_row = ['CMBEGIN', decode(ttylog_users), timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
                     else:
                         csv_row.append(snoopy_cmd)
                     ttylog_cmd = ttylog_cmd.replace(snoopy_cmd, '', 1)
@@ -248,7 +257,7 @@ if __name__ == "__main__":
                     i += 1
             if '' != decode(ttylog_entry):
                 logging.debug('writing csv row for command {}'.format(revealhex(ttylog_entry)))
-                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', '', '', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
+                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', revealhex(ttylog_users), '', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
     csvfile.close()
 
 
