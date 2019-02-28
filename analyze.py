@@ -15,9 +15,9 @@ import subprocess
 import logging
 import re
 
-logpath = '/var/log/ttylog/analysis.log'; preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
-#logpath = './analysis.log'; preprocpath = './preproc_snoopy.log' #dbg
-#logging.basicConfig(filename=logpath, filemode='w', level=logging.DEBUG)
+#logpath = '/var/log/ttylog/analysis.log.'; preprocpath = '/var/log/ttylog/preproc_snoopy.log' # prod
+logpath = './analysis.log'; preprocpath = './preproc_snoopy.log' #dbg
+logging.basicConfig(filename=logpath, filemode='w', level=logging.DEBUG)
 
 logging.debug("running with __name__ == {}".format(__name__))
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
                     user = x.split('un:')[-1].split(' ')[0]
                 if 'hn:' in x:
                     host = x.split('hn:')[-1].split(' ')[0]
-            prompt = '{}@{}'.format(user,host)
+            prompt = '@{}'.format(host)
             if 'bash' in lines[i-1] or 'bash' in lines[i+1]:
                 split_line = ( lines[i-1] if 'bash' in lines[i-1] else lines[i+1] ).split()
                 for x in split_line:
@@ -198,7 +198,6 @@ if __name__ == "__main__":
                         count += 1
                         ordering[tty_sess].append(cmd)
                         sessions[tty_sess]['ttylog'][str(count)+cmd] = []
-                    if tty_user != '':
                         user_order[tty_sess].append(tty_user)
                 elif cmd != '':
                     sessions[tty_sess]['ttylog'][str(count)+cmd].append(l)
@@ -248,7 +247,7 @@ if __name__ == "__main__":
                     timestamp = snoopy_entry[snoopy_data]
                     cwd = snoopy_data.split()[3][4:]
                     if len(csv_row) == 0:
-                        csv_row = ['CMBEGIN', decode(ttylog_users), timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
+                        csv_row = ['CMBEGIN', ttylog_users, timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
                     else:
                         csv_row.append(snoopy_cmd)
                     ttylog_cmd = ttylog_cmd.replace(snoopy_cmd, '', 1)
@@ -256,7 +255,7 @@ if __name__ == "__main__":
                     i += 1
             if '' != decode(ttylog_entry):
                 logging.debug('writing csv row for command {}'.format(revealhex(ttylog_entry)))
-                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', revealhex(ttylog_users), '', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
+                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', ttylog_users, '', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
     csvfile.close()
 
 
