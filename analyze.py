@@ -255,7 +255,7 @@ if __name__ == "__main__":
                     i += 1
             if '' != decode(ttylog_entry):
                 logging.debug('writing csv row for command {}'.format(revealhex(ttylog_entry)))
-                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', ttylog_users, '', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
+                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', ttylog_users, '','', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
     csvfile.close()
 
 
