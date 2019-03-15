@@ -62,29 +62,56 @@ def decode(input_string):
     # String is stored as a list because
     # python forbids the modification of
     # a string
-    displayed_string = []
-    cursor_position = 0
+    buf = []
+    i_line = 0
+    i_stream_line = 0
+    i_buf = 0
+    buf.append([])
 
-    # Loop on our input (transitions sequence)
-    for character in input_string:
-
-        # Alphanumeric transition
-        if str.isalnum(character) or str.isspace(character) or character in string.punctuation:
-            # Add the character to the string
-            displayed_string[cursor_position:cursor_position+1] = character
-            # Move the cursor forward
-            cursor_position += 1
-
-        # Backward transition
-        elif character == "\x08":
-            # Move the cursor backward
-            cursor_position -= 1
+    while i_stream_line < len(input_string):
+	if input_string[i_stream_line] == '\x08':
+	     i_buf -= 0 if i_buf == 0 else 1
+             i_stream_line += 1
+        elif input_string[i_stream_line] == '\x1b' and input_string[i_stream_line + 1] == '[':
+             i_stream_line += 2
+             if input_string[i_stream_line] == 'K':
+                 """ erase to end of line """
+                 buf[i_line] = buf[i_line][:i_buf]
+                 i_stream_line += 1
+             elif (input_string[i_stream_line] == '@') or (input_string[i_stream_line] in string.digits and input_string[i_stream_line + 1] == '@'):
+                 """ make room for n characters at cursor """
+                 n = int(input_string[i_stream_line]) if input_string[i_stream_line] in string.digits else 1
+                 i = 0
+                 while i < n:
+                     if i_buf < len(buf[i_line]):
+                         buf[i_line][i_buf] = ''
+                     else:
+                         buf[i_line] += ''
+                     i_buf += 1
+                     i += 1
+                 i_stream_line += 2 if input_string[i_stream_line] in string.digits else 1
+             elif (input_string[i_stream_line] == 'C') or (input_string[i_stream_line] in string.digits and input_string[i_stream_line + 1] == 'C'):
+                 """ move the cursor forward n columns """
+                 n = int(input_string[i_stream_line]) if input_string[i_stream_line] in string.digits else 1
+                 i_buf += n
+                 i_stream_line += 2 if input_string[i_stream_line] in string.digits else 1
+             elif (input_string[i_stream_line] == 'P') or (input_string[i_stream_line] in string.digits and input_string[i_stream_line + 1] == 'P'):
+                 """ delete n chars  """
+                 n = int(input_string[i_stream_line]) if input_string[i_stream_line] in string.digits else 1
+                 buf[i_line] = buf[i_line][:i_buf] + buf[i_line][i_buf + n:]
+                 i_stream_line += 2 if input_string[i_stream_line] in string.digits else 1
         else:
-            pass
-            #print("{} is not handled by this function".format(repr(character)))
-
+             if i_buf < len(buf[i_line]):
+                 #import pdb; pdb.set_trace()
+                 buf[i_line][i_buf] = input_string[i_stream_line]
+             else:
+                 buf[i_line] += input_string[i_stream_line]
+             i_buf += 1
+             i_stream_line += 1
+    buf[i_line] = ''.join(buf[i_line])
+    #i_line += 1
     # We transform our "list" string back to a real string
-    return "".join(displayed_string)
+    return "".join(buf)
 
 if __name__ == "__main__":
     logging.debug("running main with len(sys.argv) == {}".format(len(sys.argv)))
@@ -247,7 +274,7 @@ if __name__ == "__main__":
                     timestamp = snoopy_entry[snoopy_data]
                     cwd = snoopy_data.split()[3][4:]
                     if len(csv_row) == 0:
-                        csv_row = ['CMBEGIN', ttylog_users, timestamp, cwd, decode(ttylog_entry), revealhex('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
+                        csv_row = ['CMBEGIN', ttylog_users, timestamp, cwd, decode(ttylog_entry), decode('\n'.join([decode(j) for j in ttylog_return_data])).replace(',','%'), snoopy_cmd]
                     else:
                         csv_row.append(snoopy_cmd)
                     ttylog_cmd = ttylog_cmd.replace(snoopy_cmd, '', 1)
@@ -255,7 +282,7 @@ if __name__ == "__main__":
                     i += 1
             if '' != decode(ttylog_entry):
                 logging.debug('writing csv row for command {}'.format(revealhex(ttylog_entry)))
-                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', ttylog_users, '','', revealhex(ttylog_entry), '!TRUNCATED TO 500L! ' + revealhex('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else revealhex('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
+                csvwriter.writerow( csv_row if len(csv_row) != 0 else [ 'CMBEGIN', ttylog_users, '','', decode(ttylog_entry), '!TRUNCATED TO 500L! ' + decode('\n'.join(ttylog_return_data[:501])).replace(',','%') if len(ttylog_return_data) > 500 else decode('\n'.join(ttylog_return_data)).replace(',','%'), ''] )
     csvfile.close()
 
 
